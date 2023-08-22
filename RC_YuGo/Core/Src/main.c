@@ -21,7 +21,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdbool.h>
+#include "motor.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,12 +91,50 @@ int main(void)
   MX_TIM1_Init();
   /* USER CODE BEGIN 2 */
 
+  Motor motor_fl;
+  Motor_initialize(&motor_fl, &htim1, TIM_CHANNEL_1,
+		  MOTOR_FL_IN1_GPIO_Port, MOTOR_FL_IN1_Pin,
+		  MOTOR_FL_IN2_GPIO_Port, MOTOR_FL_IN2_Pin,
+		  60, 100);
+
+  Motor motor_fr;
+  Motor_initialize(&motor_fr, &htim1, TIM_CHANNEL_2,
+		  MOTOR_FR_IN1_GPIO_Port, MOTOR_FR_IN1_Pin,
+		  MOTOR_FR_IN2_GPIO_Port, MOTOR_FR_IN2_Pin,
+		  60, 100);
+
+  Motor motor_rl;
+  Motor_initialize(&motor_rl, &htim1, TIM_CHANNEL_3,
+		  MOTOR_RL_IN1_GPIO_Port, MOTOR_RL_IN1_Pin,
+		  MOTOR_RL_IN2_GPIO_Port, MOTOR_RL_IN2_Pin,
+		  60, 100);
+
+  Motor motor_rr;
+  Motor_initialize(&motor_rr, &htim1, TIM_CHANNEL_4,
+		  MOTOR_RR_IN1_GPIO_Port, MOTOR_RR_IN1_Pin,
+		  MOTOR_RR_IN2_GPIO_Port, MOTOR_RR_IN2_Pin,
+		  60, 100);
+
+  bool first_run = true;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+		if (first_run)
+		{
+			Motor_setSpeed(&motor_fl, 80);
+			Motor_setSpeed(&motor_fr, 80);
+			Motor_setSpeed(&motor_rl, 80);
+			Motor_setSpeed(&motor_rr, 80);
+			HAL_Delay(3000);
+			Motor_stop(&motor_fl);
+			Motor_stop(&motor_fr);
+			Motor_stop(&motor_rl);
+			Motor_stop(&motor_rr);
+			first_run = false;
+		}
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -161,6 +200,7 @@ static void MX_TIM1_Init(void)
 
   /* USER CODE END TIM1_Init 0 */
 
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
   TIM_MasterConfigTypeDef sMasterConfig = {0};
   TIM_OC_InitTypeDef sConfigOC = {0};
   TIM_BreakDeadTimeConfigTypeDef sBreakDeadTimeConfig = {0};
@@ -175,6 +215,15 @@ static void MX_TIM1_Init(void)
   htim1.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim1.Init.RepetitionCounter = 0;
   htim1.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim1, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_Init(&htim1) != HAL_OK)
   {
     Error_Handler();
@@ -193,6 +242,18 @@ static void MX_TIM1_Init(void)
   sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
   sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
   if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -221,13 +282,57 @@ static void MX_TIM1_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
 /* USER CODE BEGIN MX_GPIO_Init_1 */
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
   __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOF, MOTOR_RR_IN2_Pin|MOTOR_RR_IN1_Pin|MOTOR_RL_IN2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(MOTOR_RL_IN1_GPIO_Port, MOTOR_RL_IN1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(GPIOE, MOTOR_FL_IN1_Pin|MOTOR_FL_IN2_Pin|MOTOR_FR_IN1_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(MOTOR_FR_IN2_GPIO_Port, MOTOR_FR_IN2_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : MOTOR_RR_IN2_Pin MOTOR_RR_IN1_Pin MOTOR_RL_IN2_Pin */
+  GPIO_InitStruct.Pin = MOTOR_RR_IN2_Pin|MOTOR_RR_IN1_Pin|MOTOR_RL_IN2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(GPIOF, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MOTOR_RL_IN1_Pin */
+  GPIO_InitStruct.Pin = MOTOR_RL_IN1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(MOTOR_RL_IN1_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : MOTOR_FL_IN1_Pin MOTOR_FL_IN2_Pin MOTOR_FR_IN1_Pin */
+  GPIO_InitStruct.Pin = MOTOR_FL_IN1_Pin|MOTOR_FL_IN2_Pin|MOTOR_FR_IN1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : MOTOR_FR_IN2_Pin */
+  GPIO_InitStruct.Pin = MOTOR_FR_IN2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
+  HAL_GPIO_Init(MOTOR_FR_IN2_GPIO_Port, &GPIO_InitStruct);
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
