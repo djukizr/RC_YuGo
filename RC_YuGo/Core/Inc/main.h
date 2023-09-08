@@ -83,6 +83,10 @@ void Error_Handler(void);
 #define MOTOR_FR_IN1_GPIO_Port GPIOE
 #define MOTOR_FR_IN2_Pin GPIO_PIN_11
 #define MOTOR_FR_IN2_GPIO_Port GPIOB
+#define USART1_BL_TX_Pin GPIO_PIN_9
+#define USART1_BL_TX_GPIO_Port GPIOA
+#define USART1_BL_RX_Pin GPIO_PIN_10
+#define USART1_BL_RX_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

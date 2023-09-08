@@ -10,7 +10,7 @@
 #ifndef INC_JOYSTICK_JOYSTICK_UTILITY_H_
 #define INC_JOYSTICK_JOYSTICK_UTILITY_H_
 
-#include "stm32f1xx_hal.h"
+#include <stdint.h>
 
 #define JOYSTICK_MESSAGE_LENGTH 12
 
