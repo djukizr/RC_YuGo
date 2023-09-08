@@ -29,4 +29,11 @@
 		<nature>org.eclipse.cdt.managedbuilder.core.managedBuildNature</nature>
 		<nature>org.eclipse.cdt.managedbuilder.core.ScannerConfigNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>Joystick</name>
+			<type>2</type>
+			<location>D:/Sources/RC_YuGo/Joystick/Core/Src/Joystick</location>
+		</link>
+	</linkedResources>
 </projectDescription>
