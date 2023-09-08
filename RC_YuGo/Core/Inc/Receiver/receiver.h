@@ -36,6 +36,8 @@ typedef struct {
 // Do not forget to release memory after hard copy !!!
 void Message_initialize(Message* message, uint8_t message_ending_byte);
 
+void Message_fromString(char* str, Message* dest);
+
 void Message_hardCopy(const Message* src, Message* dest);
 
 void Message_flush(Message* msg);

@@ -56,7 +56,8 @@ void Message_hardCopy(const Message* src, Message* dest)
 	}
 }
 
-void Message_static_fromString(char* str, Message* dest)
+// TODO: Return Message structure instead of updating it as an argument.
+void Message_fromString(char* str, Message* dest)
 {
 
 	if (strlen(str) > MESSAGE_CAPACITY - 1)
@@ -131,6 +132,7 @@ void Receiver_receive()
 	if (receiver.message.size == receiver.message.capacity)
 	{
 		//Logger_LogMessage("Cannot receive any additional bytes, message array is full!\n");
+		Message_flush(&receiver.message);
 		return;
 	}
 
@@ -145,7 +147,8 @@ void Receiver_onReceive()
 	{
 		for (int i = 0; i < receiver.actions_size; i++)
 		{
-			if (memcmp(receiver.action_trigger_messages[i].content, receiver.message.content, receiver.message.size) == 0)
+			// TODO: Do the check for message code instead of whole message
+			if (memcmp(receiver.action_trigger_messages[i].content, receiver.message.content, receiver.message.size) == 0 || receiver.message.content[0] == 'j')
 			{
 				receiver.actions[i]();
 			}
