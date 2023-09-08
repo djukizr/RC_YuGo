@@ -57,6 +57,14 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define ADC_VRX_Pin GPIO_PIN_2
+#define ADC_VRX_GPIO_Port GPIOA
+#define ADC_VRY_Pin GPIO_PIN_3
+#define ADC_VRY_GPIO_Port GPIOA
+#define USART_BL_TX_Pin GPIO_PIN_9
+#define USART_BL_TX_GPIO_Port GPIOA
+#define USART_BL_RX_Pin GPIO_PIN_10
+#define USART_BL_RX_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
