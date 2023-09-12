@@ -38,7 +38,8 @@ void Joystick_encodeMessage(Joystick* joystick)
 
 void Joystick_sendData(Joystick* joystick, UART_HandleTypeDef* huart_handle)
 {
+	flushTransmitionMessage(joystick->message_);
 	Joystick_encodeMessage(joystick);
 	// Until guarding the data with semaphore use polling
-	HAL_UART_Transmit(huart_handle, joystick->message_, JOYSTICK_MESSAGE_LENGTH, 50);
+	HAL_UART_Transmit(huart_handle, joystick->message_, TRANSMITION_MESSAGE_LENGTH, 50);
 }

@@ -12,7 +12,7 @@
 
 #include <stdint.h>
 
-#define JOYSTICK_MESSAGE_LENGTH 12
+#define TRANSMITION_MESSAGE_LENGTH 30
 
 typedef struct {
 	uint32_t pos_x;
@@ -24,5 +24,7 @@ JoystickPosition Joystick_decodeMessage(uint8_t* message);
 void uint32ToUint8Message(uint8_t* message, uint32_t uint32number);
 
 void uint8MessageToUint32(uint8_t* message, uint32_t* uint32number);
+
+void flushTransmitionMessage(uint8_t* message);
 
 #endif /* INC_JOYSTICK_JOYSTICK_UTILITY_H_ */

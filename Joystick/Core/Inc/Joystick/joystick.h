@@ -18,7 +18,7 @@
 typedef struct {
 	ADC_HandleTypeDef* adc_handle_;
 	uint32_t data_[JOYSTICK_BUFFER_LENGTH];
-	uint8_t message_[JOYSTICK_MESSAGE_LENGTH];
+	uint8_t message_[TRANSMITION_MESSAGE_LENGTH];
 } Joystick;
 
 extern Joystick joystick;

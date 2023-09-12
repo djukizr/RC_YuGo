@@ -13,7 +13,7 @@ JoystickPosition Joystick_decodeMessage(uint8_t* message)
 {
 	JoystickPosition position = {.pos_x = 0, .pos_y = 0};
 	uint8MessageToUint32(&(message[2]), &position.pos_x);
-	uint8MessageToUint32(&(message[3]), &position.pos_y);
+	uint8MessageToUint32(&(message[7]), &position.pos_y);
 	return position;
 }
 
@@ -36,5 +36,13 @@ void uint8MessageToUint32(uint8_t* message, uint32_t* uint32number)
 	{
 		int shift = (message_length - 1 - i) * 8;
 		*uint32number |= (message[i] << shift) & (0xFF << shift);
+	}
+}
+
+void flushTransmitionMessage(uint8_t* message)
+{
+	for (int i = 0; i < TRANSMITION_MESSAGE_LENGTH; i++)
+	{
+		message[i] = '\0';
 	}
 }

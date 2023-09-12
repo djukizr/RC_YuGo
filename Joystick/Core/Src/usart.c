@@ -21,7 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "action_controller.h"
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -118,5 +118,12 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 }
 
 /* USER CODE BEGIN 1 */
-
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if (huart == &huart1)
+	{
+		ActionMap_executeAction(&action_map, action_data[0]);
+		HAL_UART_Receive_IT(&huart1, action_data, 1);
+	}
+}
 /* USER CODE END 1 */
