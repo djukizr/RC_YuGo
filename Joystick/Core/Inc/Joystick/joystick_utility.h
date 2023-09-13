@@ -12,6 +12,7 @@
 
 #include <stdint.h>
 
+// TODO: Create a file with definitions to be shared between components
 #define TRANSMITION_MESSAGE_LENGTH 30
 
 typedef struct {

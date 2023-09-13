@@ -29,11 +29,12 @@ uint32_t Joystick_getY(Joystick* joystick)
 void Joystick_encodeMessage(Joystick* joystick)
 {
 	joystick->message_[0] = 'j';
-	joystick->message_[1] = 'x';
-	uint32ToUint8Message(&(joystick->message_[2]), joystick->data_[0]);
-	joystick->message_[6] = 'y';
-	uint32ToUint8Message(&(joystick->message_[7]), joystick->data_[1]);
-	joystick->message_[11] = '\n';
+	joystick->message_[1] = 13;
+	joystick->message_[2] = 'x';
+	uint32ToUint8Message(&(joystick->message_[3]), joystick->data_[0]);
+	joystick->message_[7] = 'y';
+	uint32ToUint8Message(&(joystick->message_[8]), joystick->data_[1]);
+	joystick->message_[12] = '\n';
 }
 
 void Joystick_sendData(Joystick* joystick, UART_HandleTypeDef* huart_handle)

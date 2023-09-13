@@ -12,8 +12,8 @@
 JoystickPosition Joystick_decodeMessage(uint8_t* message)
 {
 	JoystickPosition position = {.pos_x = 0, .pos_y = 0};
-	uint8MessageToUint32(&(message[2]), &position.pos_x);
-	uint8MessageToUint32(&(message[7]), &position.pos_y);
+	uint8MessageToUint32(&(message[3]), &position.pos_x);
+	uint8MessageToUint32(&(message[8]), &position.pos_y);
 	return position;
 }
 

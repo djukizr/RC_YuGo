@@ -28,6 +28,7 @@
 #include "motor.h"
 #include "receiver.h"
 #include "joystick_utility.h"
+#include "actions_controller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -59,13 +60,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void test_action()
-{
-	JoystickPosition test = { .pos_x = 0, .pos_y = 0};
-	test = Joystick_decodeMessage(receiver.message.content);
-	int test2 = 0;
-	test2 = 1;
-}
+
 /* USER CODE END 0 */
 
 /**
@@ -98,6 +93,7 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM1_Init();
   MX_USART1_UART_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
   Motor motor_fl;
@@ -126,13 +122,10 @@ int main(void)
 
   bool first_run = false;
 
-  // TODO: Synchronize communication by requesting data.
-  // TODO: Drop ending message character way of work. Use fixed size messages and starting char to select the action.
-  Receiver_initialize(&huart1, '\n');
-  Message test;
-  Message_fromString("test\n", &test);
-  Receiver_addAction(&test, test_action);
-  Receiver_receive();
+  Receiver_initialize(&huart1);
+  Receiver_addAction('j', joystick_action);
+
+  //HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -152,6 +145,9 @@ int main(void)
 			Motor_stop(&motor_rr);
 			first_run = false;
 		}
+		HAL_Delay(500);
+		HAL_UART_Transmit_IT(&huart1, joystick_action_trigger, 1);
+		Receiver_receive();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

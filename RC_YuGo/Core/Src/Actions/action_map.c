@@ -16,6 +16,11 @@ void ActionMap_Initialize(ActionMap* action_map)
 
 void ActionMap_addAction(ActionMap* action_map, uint8_t action_type, Action action_func)
 {
+	if (action_map->capacity >= MAX_ACTION_NUMBER)
+	{
+		return;
+	}
+
 	action_map->array[action_map->capacity].type = action_type;
 	action_map->array[action_map->capacity].action = action_func;
 	action_map->capacity++;
