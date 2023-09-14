@@ -75,7 +75,7 @@ void Motor_changeDirection(Motor* motor)
 
 void Motor_setSpeed(Motor* motor, uint32_t speed_percentage)
 {
-	// TODO: Make Car structure with run method which will set all Motor speeds
+	// TODO: Make Car structure with run method which will set all Motor speedS
 	Motor_setDirection(motor, motor->rotation_direction_);
 	uint32_t cnt_periods = motor->min_cnt_periods_ + (motor->max_cnt_periods_ - motor->min_cnt_periods_) * speed_percentage / 100;
 	__HAL_TIM_SET_COMPARE(motor->pwm_timer_handle_, motor->pwm_timer_channel_, cnt_periods);

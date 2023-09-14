@@ -21,6 +21,7 @@
 #include "usart.h"
 
 /* USER CODE BEGIN 0 */
+#include "tim.h"
 #include "receiver.h"
 #include "joystick_utility.h"
 /* USER CODE END 0 */
@@ -122,7 +123,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if (huart == &huart1)
 	{
 		Receiver_onReceive();
-		Receiver_receive();
+		HAL_TIM_Base_Start_IT(&htim3);
+		__HAL_TIM_SET_COUNTER(&htim4, 0);
 	}
 
 }

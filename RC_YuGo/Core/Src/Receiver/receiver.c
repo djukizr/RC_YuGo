@@ -21,6 +21,8 @@ void Receiver_initialize(UART_HandleTypeDef* uart_handle)
 {
 
 	receiver.uart_handle = uart_handle;
+	receiver.received = false;
+	receiver.receiving = false;
 	Message_initialize(&(receiver.message));
 	ActionMap_Initialize(&(receiver.actions));
 
@@ -36,7 +38,12 @@ void Receiver_addAction(const uint8_t type, Action action)
 void Receiver_receive()
 {
 
-	HAL_UART_Receive_IT(receiver.uart_handle, receiver.message.content, TRANSMITION_MESSAGE_LENGTH);
+	receiver.received = false;
+	if (!receiver.receiving)
+	{
+		HAL_UART_Receive_IT(receiver.uart_handle, receiver.message.content, TRANSMITION_MESSAGE_LENGTH);
+		receiver.receiving = true;
+	}
 
 }
 
@@ -44,9 +51,16 @@ void Receiver_onReceive()
 {
 
 	// TODO: Make sure to protect message with semaphore while it is used in action!
+	receiver.received = true;
+	receiver.receiving = false;
 	receiver.message.size = receiver.message.content[1];
 	ActionMap_executeAction(&(receiver.actions), receiver.message.content[0]);
 
+}
+
+bool Receiver_isReceived()
+{
+	return receiver.received;
 }
 
 void Receiver_flushMessage()

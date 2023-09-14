@@ -17,6 +17,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "stm32f4xx_hal.h"
 #include "action_map.h"
@@ -24,8 +25,13 @@
 
 /* Receiver function *******************************************************************/
 
+// TODO: Make it possible to have multiple receivers so that data is not overwritten
+
 typedef struct {
 	UART_HandleTypeDef* uart_handle;
+
+	bool received;
+	bool receiving;
 
 	Message message;
 	ActionMap actions;
@@ -41,6 +47,8 @@ void Receiver_addAction(const uint8_t type, Action action);
 void Receiver_receive();
 
 void Receiver_onReceive();
+
+bool Receiver_isReceived();
 
 void Receiver_flushMessage();
 

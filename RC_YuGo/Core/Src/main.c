@@ -29,6 +29,7 @@
 #include "receiver.h"
 #include "joystick_utility.h"
 #include "actions_controller.h"
+#include "motor_controller.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,60 +95,21 @@ int main(void)
   MX_TIM1_Init();
   MX_USART1_UART_Init();
   MX_TIM3_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
-  Motor motor_fl;
-  Motor_initialize(&motor_fl, &htim1, TIM_CHANNEL_1,
-		  MOTOR_FL_IN1_GPIO_Port, MOTOR_FL_IN1_Pin,
-		  MOTOR_FL_IN2_GPIO_Port, MOTOR_FL_IN2_Pin,
-		  60, 100);
-
-  Motor motor_fr;
-  Motor_initialize(&motor_fr, &htim1, TIM_CHANNEL_2,
-		  MOTOR_FR_IN1_GPIO_Port, MOTOR_FR_IN1_Pin,
-		  MOTOR_FR_IN2_GPIO_Port, MOTOR_FR_IN2_Pin,
-		  60, 100);
-
-  Motor motor_rl;
-  Motor_initialize(&motor_rl, &htim1, TIM_CHANNEL_3,
-		  MOTOR_RL_IN1_GPIO_Port, MOTOR_RL_IN1_Pin,
-		  MOTOR_RL_IN2_GPIO_Port, MOTOR_RL_IN2_Pin,
-		  60, 100);
-
-  Motor motor_rr;
-  Motor_initialize(&motor_rr, &htim1, TIM_CHANNEL_4,
-		  MOTOR_RR_IN1_GPIO_Port, MOTOR_RR_IN1_Pin,
-		  MOTOR_RR_IN2_GPIO_Port, MOTOR_RR_IN2_Pin,
-		  60, 100);
-
-  bool first_run = false;
+  intializeMotors();
 
   Receiver_initialize(&huart1);
-  Receiver_addAction('j', joystick_action);
+  Receiver_addAction('j', joystickAction);
 
-  //HAL_TIM_Base_Start_IT(&htim3);
+  // Bluetooth period timer
+  HAL_TIM_Base_Start_IT(&htim4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-		if (first_run)
-		{
-			Motor_setSpeed(&motor_fl, 80);
-			Motor_setSpeed(&motor_fr, 80);
-			Motor_setSpeed(&motor_rl, 80);
-			Motor_setSpeed(&motor_rr, 80);
-			HAL_Delay(3000);
-			Motor_stop(&motor_fl);
-			Motor_stop(&motor_fr);
-			Motor_stop(&motor_rl);
-			Motor_stop(&motor_rr);
-			first_run = false;
-		}
-		HAL_Delay(500);
-		HAL_UART_Transmit_IT(&huart1, joystick_action_trigger, 1);
-		Receiver_receive();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
